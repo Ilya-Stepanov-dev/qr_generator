@@ -1,15 +1,20 @@
 import flet as ft
-# ---------
-
+from src import get_counter
 from app import App
+
+
+
 def main(page: ft.Page):
     page.title = "QR-generator"
     # page.theme_mode = ft.ThemeMode.LIGHT
     page.horizontal_alignment = ft.CrossAxisAlignment.START
+    page.window.width = 550
+    page.window.height = 900
 
-    page.add(App(343))
+    page.add(App(get_counter()))
 
 ft.app(main)
+ft.app(target=main)
 
 # ----------
 
@@ -96,4 +101,3 @@ ft.app(main)
 
 #     page.add(t)
 
-ft.app(target=main)

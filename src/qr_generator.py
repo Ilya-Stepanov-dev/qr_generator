@@ -21,22 +21,23 @@ def create_mac_address(num):
     return ":".join(mac)
 
 
-def create_qr(value, name_file=None):
-    if not name_file:
-        name_file = f"qr_png\{value}.png"
+def create_qr(value, file_name=None):
+    if not file_name:
+        file_name = f"qr_png\{value}.png"
     else:
-        name_file = f"qr_png\{name_file}.png"
+        file_name = f"qr_png\{file_name}.png"
     qrcode = qr.make_qr(value)
-    qrcode.save(name_file, scale=4)
+    qrcode.save(file_name, scale=15)
+    return {"value": value, "file_name": file_name}
     # mac_str = create_mac_address(value)
 
 def create_mac_qr(value):
     mac = create_mac_address(value)
-    create_qr(value=mac, name_file=value)
+    return create_qr(value=mac, file_name="mac_"+str(value))
 
 
-create_qr(123)
-create_mac_qr(1234)
+# create_qr(123)
+# create_mac_qr(1234)
 
 # while True:
 #     mac_str = create_mac_address(count)
