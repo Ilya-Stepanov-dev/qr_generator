@@ -1,2 +1,2 @@
 segno==1.6.1
-flet
+flet==0.23.2

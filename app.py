@@ -1,133 +1,9 @@
 import flet as ft
 from src import create_qr as cr_qr
 from src import create_mac_qr as cr_qr_mac
-from src import save_counter
+# from src import save_counter
 
-class EntryField(ft.Row):
-    def __init__(self, text ,func_left_button, func_right_button):
-        super().__init__()
-        self.counter = text
-        self.text_filed = ft.TextField(value=text, text_align=ft.TextAlign.CENTER, label="Number MAC to generate QR code", on_focus=self.clear_text)
-        self.left_button = ft.IconButton(ft.icons.CLEAR, on_click=func_left_button)
-        self.right_button = ft.IconButton(ft.icons.NAVIGATE_NEXT, on_click=func_right_button)
-        self.alignment = ft.MainAxisAlignment.CENTER
-        self.horizontal_alignment = ft.CrossAxisAlignment.START
-        self.controls = [self.left_button, self.text_filed, self.right_button]
-
-    def incrementing_number(self):
-        self.text_filed.value = str(int(self.text_filed.value) + 1)
-        self.counter = self.text_filed.value
-        save_counter(self.text_filed.value)
-        self.update()
-
-    def change_text_label(self, text):
-        self.text_filed.label = text
-        self.update()
-    
-    def change_to_mac(self):
-        self.text_filed.value = self.counter
-        self.change_text_label("Number MAC to generate QR code")
-    
-    def change_to_any(self):
-        self.change_text_label("Text to generate QR code")
-
-    def clear_text(self,e):
-        self.text_filed.value = None
-        self.update()
-
-# class TabsName(enum.Enum):
-#     MAC = 0
-#     ETHER = 1
-#     INTERNET = 2
-#     ANY = 3
-
-class Tabs(ft.Row):
-    def __init__(self, func_on_change):
-        super().__init__()
-        self.tabs = ft.Tabs(selected_index=0,
-                            on_change=func_on_change,
-                            tabs=[ft.Tab(text="MAC"), 
-                                  ft.Tab(text="ETHER"), 
-                                  ft.Tab(text="INTERNET"),
-                                  ft.Tab(text="ANY")],
-        )
-        self.num_tab = 0
-        self.alignment = ft.MainAxisAlignment.CENTER
-        self.horizontal_alignment = ft.CrossAxisAlignment.START
-        self.controls = [self.tabs]
-
-
-class Image(ft.Image):
-    def __init__(self, src):
-        super().__init__()
-        self.width = 300
-        self.height = 300
-        self.fit = ft.ImageFit.CONTAIN
-        self.src = src
-
-
-class Text(ft.Text):
-    def __init__(self, text):
-        super().__init__()
-        self.value = text
-        self.scale = 1.5
-        self.alignment = ft.MainAxisAlignment.CENTER
-
-
-class MainColumn(ft.Column):
-    def __init__(self, img_path, text):
-        super().__init__()
-        # self.img_path = img_path
-        # self.text_img = text
-        self.alignment=ft.MainAxisAlignment.START, 
-        self.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-        self.controls = [Image(img_path), Text(text)]
-        self.mac_controls = [Image(img_path), Text(text)]
-        self.ether_controls = [Image("qr_default\\ETHER.png"),Text("ETHER")]
-        self.internet_controls = [Image("qr_default\\lihp08969fkhjgn.png"),Text("INTERNET")]
-        self.any_controls = [Image(img_path), Text(text)]
-        
-    def change_controls(self, new_controls):
-        self.controls = new_controls
-        self.update()
-
-    def change_controls_to_mac(self):
-        self.change_controls(self.mac_controls)
-    
-    def change_controls_to_ether(self):
-        self.change_controls(self.ether_controls)
-
-    def change_controls_to_internet(self):
-        self.change_controls(self.internet_controls)
-
-    def change_controls_to_any(self):
-        self.change_controls(self.any_controls)
-
-    def update_mac_content(self, img_path, text):
-        self.mac_controls = [Image(img_path), Text(text)]
-        self.change_controls_to_mac()
-
-    def update_any_content(self, img_path, text):
-        self.any_controls = [Image(img_path), Text(text)]
-        self.change_controls_to_any()
-
-
-class History(ft.Column):
-    def __init__(self):
-        super().__init__()
-        self.alignment=ft.MainAxisAlignment.START, 
-        self.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-        self.title_row = ft.Row(
-                controls = [ft.Text(value="HISTORY", theme_style=ft.TextThemeStyle.TITLE_MEDIUM),],
-                alignment = ft.MainAxisAlignment.CENTER,
-                # horizontal_alignment = ft.CrossAxisAlignment.CENTER,
-                # height=50,
-        )
-        self.controls = [
-            ft.Divider(),
-            self.title_row,
-        ]
-
+from application_classes import EntryField, Tabs, MainColumn, History
 
 class App(ft.Column):
     def __init__(self, text: str):
@@ -144,14 +20,11 @@ class App(ft.Column):
                 controls = [ft.Text(value="QR Generator", theme_style=ft.TextThemeStyle.HEADLINE_MEDIUM)],
                 alignment = ft.MainAxisAlignment.CENTER,
             ),
+            ft.Row(height=20),
             self.entry_field,
             self.row_tabs,
             self.main_column,
-            # ft.Row(
-            #     controls = [ft.Text(value="HISTORY", theme_style=ft.TextThemeStyle.TITLE_MEDIUM)],
-            #     alignment = ft.MainAxisAlignment.CENTER,
-            #     height=50,
-            # )
+            ft.Row(height=10),
             self.history,
         ]
 
@@ -173,6 +46,7 @@ class App(ft.Column):
             elif num_tab == 3:
                 qr = cr_qr(value=value)
                 self.main_column.update_any_content(img_path=qr['file_name'], text=qr['value'])
+            self.history.update_content()
 
     
     def func_on_change_tab(self, e):

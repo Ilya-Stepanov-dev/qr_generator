@@ -9,7 +9,7 @@ def main(page: ft.Page):
     # page.theme_mode = ft.ThemeMode.LIGHT
     page.horizontal_alignment = ft.CrossAxisAlignment.START
     page.window.width = 550
-    page.window.height = 900
+    page.window.height = 1000
 
     page.add(App(get_counter()))
 
