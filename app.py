@@ -3,7 +3,7 @@ from src import create_qr as cr_qr
 from src import create_mac_qr as cr_qr_mac
 # from src import save_counter
 
-from application_classes import EntryField, Tabs, MainColumn, History
+from application_classes import EntryField, Tabs, MainColumn, Text, Image, History
 
 class App(ft.Column):
     def __init__(self, text: str):
@@ -13,7 +13,7 @@ class App(ft.Column):
         self.entry_field = EntryField(text=text, func_left_button=self.clear_text, func_right_button=self.create_qr)
         self.row_tabs = Tabs(func_on_change=self.func_on_change_tab)
         self.main_column = MainColumn("qr_default\\welcome.png", "Welcome to the QR Generator")
-        self.history = History()
+        self.history = History(self.view_history)
 
         self.controls = [
             ft.Row(
@@ -27,6 +27,9 @@ class App(ft.Column):
             ft.Row(height=10),
             self.history,
         ]
+
+    def view_history(self, file_name):
+        self.main_column.change_controls([Image(f"qr_png\{file_name}"), ft.Row(height=20), Text(file_name)])
 
     def clear_text(self,e):
         self.entry_field.text_filed.value = None

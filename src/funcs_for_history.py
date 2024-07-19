@@ -46,7 +46,6 @@ def delete_file(name_file):
     path = os.getcwd() + f"\qr_png\\{name_file}"
     os.remove(path)
 
-
     # diff = set_a.symmetric_difference(set_b)
     # add_set = diff.intersection(set_b)
     # delete_set = diff.intersection(set_a)
